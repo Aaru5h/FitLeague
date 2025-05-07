@@ -1,6 +1,29 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 
 const Workout = () => {
+
+  const [workouts,setWorkouts] = useState([])
+  const [type, setType] = useState('')
+
+  const [difficulty, setDifficulty] = useState('Beginner')
+  const [workoutType, setWorkoutType] = useState('None')
+
+
+  function handleWorkoutTypeChange(e){
+    setType(e.target.value)
+    setWorkoutType(e.target.value)
+  }
+
+  function handleDifficulty(e){
+    setDifficulty(e.target.value)
+  }
+
+  function handleClick(){
+    setWorkouts([...workouts,type])
+    setDifficulty('Beginner')
+    setWorkoutType('None')
+  }
   return (
     <div>
       <h1>Today's Workout</h1>
@@ -12,10 +35,10 @@ const Workout = () => {
 
           <label>Select Your Difficulty</label>
 
-          <select className='Difficulty'>
-          <option>Beginner</option>
-          <option>Intermediate</option>
-          <option>Pro</option>
+          <select className='Difficulty' value={difficulty} onChange={handleDifficulty}>
+          <option value = 'Beginner'>Beginner</option>
+          <option value = 'Intermediate'>Intermediate</option>
+          <option value = 'Pro'>Pro</option>
           </select>
         </div>
 
@@ -23,11 +46,12 @@ const Workout = () => {
 
           <label>Workout Type</label>
 
-          <select className='WorkoutType'>
-            <option>Legs</option>
-            <option>Biceps</option>
-            <option>Core</option>
-            <option>Full Body</option>
+          <select className='WorkoutType' onChange={handleWorkoutTypeChange} value = {workoutType}>
+            <option value = 'None'>None</option>
+            <option value = 'Legs'>Legs</option>
+            <option value = 'Biceps'>Biceps</option>
+            <option value = 'Core'>Core</option>
+            <option value = 'Full Body'>Full Body</option>
           </select>
         </div>
 
@@ -44,7 +68,27 @@ const Workout = () => {
       </div>
 
 
-      <button className='generate'>Generate Workout</button>
+      <button className='generate' onClick={handleClick}>Generate Workout</button>
+
+
+      <div className='Workout-display'>
+
+        <h2>Your Workout for today</h2>
+
+        {workouts.length === 0?
+          <p>No Workout Scheduled</p>
+          :
+          <ul>
+            {
+              workouts.map((workout,index)=>(
+                <li key={index}>{workout}</li>
+              ))
+            }
+          </ul>
+        }
+
+      </div>
+
 
     </div>
   )
