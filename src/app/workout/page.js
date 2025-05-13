@@ -1,14 +1,14 @@
 'use client'
 import React, { useState } from 'react'
+import './styles.css'
 
 const Workout = () => {
 
   const [workouts,setWorkouts] = useState([])
   const [type, setType] = useState('')
-
   const [difficulty, setDifficulty] = useState('Beginner')
   const [workoutType, setWorkoutType] = useState('None')
-
+  const [duration, setDuration] = useState('15 minutes')
 
   function handleWorkoutTypeChange(e){
     setType(e.target.value)
@@ -20,10 +20,15 @@ const Workout = () => {
   }
 
   function handleClick(){
-    setWorkouts([...workouts,type])
+    if (workoutType === 'None') return;
+
+    const workoutSummary = `${difficulty} ${workoutType} for ${duration}`;
+    setWorkouts([...workouts, workoutSummary])
     setDifficulty('Beginner')
     setWorkoutType('None')
+    setDuration('15 minutes')
   }
+
   return (
     <div>
       <h1>Today's Workout</h1>
@@ -32,33 +37,28 @@ const Workout = () => {
       <div className='filter'>
 
         <div className='Difficulty-options'>
-
           <label>Select Your Difficulty</label>
-
           <select className='Difficulty' value={difficulty} onChange={handleDifficulty}>
-          <option value = 'Beginner'>Beginner</option>
-          <option value = 'Intermediate'>Intermediate</option>
-          <option value = 'Pro'>Pro</option>
+            <option value='Beginner'>Beginner</option>
+            <option value='Intermediate'>Intermediate</option>
+            <option value='Pro'>Pro</option>
           </select>
         </div>
 
         <div className='WorkoutType-container'>
-
           <label>Workout Type</label>
-
-          <select className='WorkoutType' onChange={handleWorkoutTypeChange} value = {workoutType}>
-            <option value = 'None'>None</option>
-            <option value = 'Legs'>Legs</option>
-            <option value = 'Biceps'>Biceps</option>
-            <option value = 'Core'>Core</option>
-            <option value = 'Full Body'>Full Body</option>
+          <select className='WorkoutType' onChange={handleWorkoutTypeChange} value={workoutType}>
+            <option value='None'>None</option>
+            <option value='Legs'>Legs</option>
+            <option value='Biceps'>Biceps</option>
+            <option value='Core'>Core</option>
+            <option value='Full Body'>Full Body</option>
           </select>
         </div>
 
         <div className='Duration-container'>
-
           <label>Duration of the Workout</label>
-          <select className='Duration'>
+          <select className='Duration' value={duration} onChange={(e) => setDuration(e.target.value)}>
             <option>15 minutes</option>
             <option>30 minutes</option>
             <option>45 minutes</option>
@@ -67,15 +67,11 @@ const Workout = () => {
         </div>
       </div>
 
-
       <button className='generate' onClick={handleClick}>Generate Workout</button>
 
-
       <div className='Workout-display'>
-
         <h2>Your Workout for today</h2>
-
-        {workouts.length === 0?
+        {workouts.length === 0 ?
           <p>No Workout Scheduled</p>
           :
           <ul>
@@ -86,10 +82,7 @@ const Workout = () => {
             }
           </ul>
         }
-
       </div>
-
-
     </div>
   )
 }
