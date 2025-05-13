@@ -1,0 +1,52 @@
+.about-container {
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: Arial, sans-serif;
+  }
+  
+  .about-container h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .about-container h4 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .about-container h2 {
+    font-size: 1.8rem;
+    margin-top: 30px;
+    color: #333;
+  }
+  
+  .about-container p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-top: 10px;
+    color: #555;
+  }
+  
+  .about-container ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+  
+  .about-container ul li {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  
+  .about-container a {
+    color: #4CAF50;
+    text-decoration: none;
+  }
+  
+  .about-container a:hover {
+    text-decoration: underline;
+  }
+  

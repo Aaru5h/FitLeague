@@ -13,6 +13,7 @@ const Navbar = () => {
         <Link href="/workout">Workout Generator</Link>
         <Link href="/leaderboard">Leaderboard</Link>
         <Link href='/profile'>Profile</Link>
+        <Link href='/about'>About Us</Link>
       </div>
       <Link href='/auth/login'>
         <button className={styles.authButton}>
