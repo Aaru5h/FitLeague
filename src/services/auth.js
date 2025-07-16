@@ -1,14 +1,28 @@
 import { auth } from "./firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 
-export const signUp = async (email,password)=>{
-    return createUserWithEmailAndPassword(auth,email,password)
-}
+// Sign up and set user's display name
+export const signUp = async (email, password, name) => {
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+  await updateProfile(user, {
+    displayName: name,
+  });
 
-export const logIn = async(email,password)=>{
-    return signInWithEmailAndPassword(auth,email,password)
-}
+  return user;
+};
 
-export const logOut = async()=>{
-    return signOut(auth)
-}
+// Log in
+export const logIn = async (email, password) => {
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+// Log out
+export const logOut = async () => {
+  return signOut(auth);
+};

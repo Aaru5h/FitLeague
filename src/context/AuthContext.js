@@ -1,7 +1,7 @@
 'use client'
 import { auth } from "@/services/firebase"
 import { onAuthStateChanged } from "firebase/auth"
-import { Children, createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 const AuthContext = createContext()
 
@@ -27,4 +27,5 @@ export const AuthProvider = ({children})=>{
 }
 
 
-export const useAuth =()=> createContext(AuthContext)
+export const useAuth =()=> useContext(AuthContext)
+export { AuthContext }
