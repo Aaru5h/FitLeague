@@ -59,6 +59,7 @@ const Profile = () => {
             <li>Name: {user.displayName}</li>
             <li>Email: {user.email}</li>
             <li>UID: {user.uid}</li>
+            {/* <li>Total Workouts: {user.totalWorkouts}</li> */}
         </ul>
     </div>
   )
