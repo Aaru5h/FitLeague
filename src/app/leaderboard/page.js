@@ -58,43 +58,55 @@
 // }
 
 // export default Leaderboard
-'use client';
-import { useEffect, useState } from 'react';
+'use client'
+import { useEffect, useState } from 'react'
 
-const Leaderboard = () => {
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Leaderboard({ participants }) {
+  const [activities, setActivities] = useState([])
+  const [loading, setLoading] = useState(!participants)
+  const [errorMsg, setErrorMsg] = useState('')
 
   useEffect(() => {
+    if (participants) {
+      setActivities(participants)
+      return
+    }
+
     const fetchActivities = async () => {
       try {
-        const res = await fetch('/api/strava/activities');
-        const data = await res.json();
-        setActivities(data);
+        const res = await fetch('/api/strava/activities')
+        const data = await res.json()
+        console.log('Fetched activities:', data)
+
+        if (!Array.isArray(data)) {
+          setErrorMsg(data.error || 'Unexpected error')
+        } else {
+          setActivities(data)
+        }
       } catch (err) {
-        console.error('Error fetching Strava data', err);
+        console.error('Error fetching activities:', err)
+        setErrorMsg('Failed to load leaderboard')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchActivities();
-  }, []);
+    fetchActivities()
+  }, [participants])
 
-  if (loading) return <p>Loading leaderboard...</p>;
+  if (loading) return <p>Loading leaderboard</p>
+  if (errorMsg) return <p style={{ color: 'red' }}>{errorMsg}</p>
 
   return (
     <div>
       <h2>Leaderboard</h2>
       <ul>
         {activities.map((activity, index) => (
-          <li key={activity.id}>
-            {index + 1}. <strong>{activity.name}</strong> — {activity.distance / 1000} km
+          <li key={activity.id || index}>
+            {index + 1}. <strong>{activity.name}</strong> — {(activity.distance / 1000).toFixed(2)} km
           </li>
         ))}
       </ul>
     </div>
-  );
-};
-
-export default Leaderboard;
+  )
+}
