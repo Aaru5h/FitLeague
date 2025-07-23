@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/context/AuthContext'
 import { getStravaActivities, getAthleteInfo, getStravaAuthUrl } from '@/services/strava'
 import styles from './styles.css'
 
@@ -361,14 +361,13 @@ export default function LeaderboardPage() {
     }
   }
 
-  if (loading) {
+    if (loading) {
     return (
-      <div className={styles.page}>
-        <Navigation />
-        <main className={styles.main}>
+      <div className="leaderboard-page">
+        <main className="leaderboard-main">
           <div className="container">
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
+            <div className="loading-wrapper">
+              <div className="loading-spinner"></div>
               <p>Loading leaderboard...</p>
             </div>
           </div>
@@ -378,22 +377,20 @@ export default function LeaderboardPage() {
   }
 
   return (
-    <div className={styles.page}>
-      <Navigation />
-      
-      <main className={styles.main}>
+    <div>      
+      <main>
         <div className="container">
-          <div className={styles.header}>
-            <h1 className={styles.title}>🏆 Leaderboard</h1>
-            <p className={styles.subtitle}>
+          <div className="leaderboard-header">
+            <h1 className="leaderboard-title">🏆 Leaderboard</h1>
+            <p className="leaderboard-subtitle">
               Compete with fellow athletes and track your fitness progress
             </p>
           </div>
 
           {!stravaConnected && (
-            <div className={styles.stravaPrompt}>
-              <div className={styles.promptCard}>
-                <div className={styles.promptIcon}>🔥</div>
+            <div className="strava-prompt">
+              <div className="strava-prompt-card">
+                <div className="strava-icon">🔥</div>
                 <h3>Connect Strava for Real Rankings</h3>
                 <p>
                   Connect your Strava account to see real leaderboard rankings based on your actual activities and compete with other connected athletes.
@@ -401,7 +398,7 @@ export default function LeaderboardPage() {
                 <button onClick={handleConnectStrava} className="btn btn-primary">
                   Connect Strava Account
                 </button>
-                <p className={styles.mockNote}>
+                <p className="mock-note">
                   <em>Currently showing demo data. Connect Strava for real rankings!</em>
                 </p>
               </div>
@@ -409,10 +406,10 @@ export default function LeaderboardPage() {
           )}
 
           {currentUserRank && (
-            <div className={styles.userRankCard}>
-              <div className={styles.userRank}>
-                <span className={styles.rankNumber}>#{currentUserRank}</span>
-                <div className={styles.rankInfo}>
+            <div className="user-rank-card">
+              <div className="user-rank">
+                <span className="rank-number">#{currentUserRank}</span>
+                <div className="rank-info">
                   <h3>Your Current Rank</h3>
                   <p>{currentUserRank}{getRankSuffix(currentUserRank)} place {stravaConnected ? 'with Strava data' : 'in demo mode'}</p>
                 </div>
@@ -420,15 +417,15 @@ export default function LeaderboardPage() {
             </div>
           )}
 
-          <div className={styles.controls}>
-            <div className={styles.filters}>
-              <div className={styles.filterGroup}>
+          <div className="leaderboard-controls">
+            <div className="leaderboard-filters">
+              <div className="filter-group">
                 <label htmlFor="period">Time Period:</label>
                 <select 
                   id="period"
                   value={selectedPeriod} 
                   onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className={styles.select}
+                  className="filter-select"
                 >
                   <option value="week">This Week</option>
                   <option value="month">This Month</option>
@@ -437,13 +434,13 @@ export default function LeaderboardPage() {
                 </select>
               </div>
 
-              <div className={styles.filterGroup}>
+              <div className="filter-group">
                 <label htmlFor="category">Category:</label>
                 <select 
                   id="category"
                   value={selectedCategory} 
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className={styles.select}
+                  className="filter-select"
                 >
                   <option value="overall">Overall</option>
                   <option value="running">Running</option>
@@ -454,30 +451,30 @@ export default function LeaderboardPage() {
             </div>
           </div>
 
-          <div className={styles.leaderboard}>
-            <div className={styles.leaderboardHeader}>
+          <div className="leaderboard-section">
+            <div className="leaderboard-section-header">
               <h2>Rankings - {selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)} · {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</h2>
             </div>
 
-            <div className={styles.leaderboardList}>
+            <div className="leaderboard-list">
               {leaderboardData.map((entry, index) => (
                 <div 
                   key={entry.id} 
-                  className={`${styles.leaderboardItem} ${entry.isCurrentUser ? styles.currentUser : ''}`}
+                  className={`leaderboard-item ${entry.isCurrentUser ? 'current-user' : ''}`}
                 >
-                  <div className={styles.rank}>
-                    <span className={styles.rankNumber}>{index + 1}</span>
-                    {entry.badge && <span className={styles.badge}>{getBadgeIcon(entry.badge)}</span>}
+                  <div className="leaderboard-rank">
+                    <span className="rank-number">{index + 1}</span>
+                    {entry.badge && <span className="rank-badge">{getBadgeIcon(entry.badge)}</span>}
                   </div>
                   
-                  <div className={styles.athlete}>
-                    <div className={styles.avatar}>{entry.avatar}</div>
-                    <div className={styles.athleteInfo}>
-                      <h3 className={styles.athleteName}>
+                  <div className="athlete-info-block">
+                    <div className="athlete-avatar">{entry.avatar}</div>
+                    <div className="athlete-meta">
+                      <h3 className="athlete-name">
                         {entry.name}
-                        {entry.isCurrentUser && <span className={styles.youLabel}>(You)</span>}
+                        {entry.isCurrentUser && <span className="you-label">(You)</span>}
                       </h3>
-                      <div className={styles.athleteStats}>
+                      <div className="athlete-stats">
                         <span>{entry.activities} activities</span>
                         <span>•</span>
                         <span>{entry.streak} day streak</span>
@@ -485,18 +482,18 @@ export default function LeaderboardPage() {
                     </div>
                   </div>
                   
-                  <div className={styles.stats}>
-                    <div className={styles.statItem}>
-                      <div className={styles.statValue}>{entry.points.toLocaleString()}</div>
-                      <div className={styles.statLabel}>Points</div>
+                  <div className="stat-block">
+                    <div className="stat-box">
+                      <div className="stat-value">{entry.points.toLocaleString()}</div>
+                      <div className="stat-label">Points</div>
                     </div>
-                    <div className={styles.statItem}>
-                      <div className={styles.statValue}>{entry.totalDistance} km</div>
-                      <div className={styles.statLabel}>Distance</div>
+                    <div className="stat-box">
+                      <div className="stat-value">{entry.totalDistance} km</div>
+                      <div className="stat-label">Distance</div>
                     </div>
-                    <div className={styles.statItem}>
-                      <div className={styles.statValue}>{entry.totalTime}</div>
-                      <div className={styles.statLabel}>Time</div>
+                    <div className="stat-box">
+                      <div className="stat-value">{entry.totalTime}</div>
+                      <div className="stat-label">Time</div>
                     </div>
                   </div>
                 </div>
@@ -505,19 +502,19 @@ export default function LeaderboardPage() {
           </div>
 
           {stravaConnected && userActivities.length > 0 && (
-            <div className={styles.recentActivities}>
-              <h2 className={styles.sectionTitle}>Recent Activities</h2>
-              <div className={styles.activitiesList}>
+            <div className="recent-activities-section">
+              <h2 className="section-title">Recent Activities</h2>
+              <div className="recent-activities-list">
                 {userActivities.slice(0, 5).map((activity) => (
-                  <div key={activity.id} className={styles.activityItem}>
-                    <div className={styles.activityType}>
+                  <div key={activity.id} className="activity-card">
+                    <div className="activity-icon">
                       {activity.type === 'Run' ? '🏃‍♂️' : 
                        activity.type === 'Ride' ? '🚴‍♂️' : 
                        activity.type === 'Swim' ? '🏊‍♂️' : '💪'}
                     </div>
-                    <div className={styles.activityInfo}>
+                    <div className="activity-details">
                       <h4>{activity.name}</h4>
-                      <div className={styles.activityStats}>
+                      <div className="activity-meta">
                         <span>{((activity.distance || 0) / 1000).toFixed(1)} km</span>
                         <span>•</span>
                         <span>{formatTime(activity.moving_time || 0)}</span>
@@ -525,7 +522,7 @@ export default function LeaderboardPage() {
                         <span>{new Date(activity.start_date).toLocaleDateString()}</span>
                       </div>
                     </div>
-                    <div className={styles.activityPoints}>
+                    <div className="activity-points">
                       +{calculatePoints([activity])} pts
                     </div>
                   </div>
