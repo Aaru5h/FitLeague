@@ -62,7 +62,7 @@ export default function Login() {
         <div className="loginBox">
           <div className="loginHeader">
             <h1 className="loginTitle">Welcome Back</h1>
-            <p className="loginSubtitle">Sign in to your FitLeague account</p>
+            <p className="loginSubtitle">Log in to your FitLeague account</p>
           </div>
 
           {error && <div className="formError">{error}</div>}

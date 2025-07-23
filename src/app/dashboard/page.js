@@ -1,32 +1,69 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useAuth } from '@/context/AuthContext'
+import { useStrava } from '@/context/StravaContext'
 import './dashboard.css'
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null)
+  const { user, loading } = useAuth()
+  const { isConnected, connectToStrava, disconnectFromStrava, athleteData, handleStravaCallback } = useStrava()
   const [stats, setStats] = useState({
     workoutsCompleted: 42,
     totalPoints: 1250,
     currentStreak: 7,
     weeklyGoal: 5
   })
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    // Mock user data - replace with actual auth context
-    setUser({
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: '/api/placeholder/100/100'
-    })
-  }, [])
+    if (!loading && !user) {
+      router.push('/auth/login')
+    }
+  }, [user, loading, router])
+
+  useEffect(() => {
+    // Handle Strava callback
+    const stravaSuccess = searchParams.get('strava_success')
+    const accessToken = searchParams.get('access_token')
+    const refreshToken = searchParams.get('refresh_token')
+    const athleteId = searchParams.get('athlete_id')
+    const stravaError = searchParams.get('strava_error')
+
+    if (stravaSuccess && accessToken && refreshToken) {
+      handleStravaCallback(accessToken, refreshToken, { id: athleteId })
+      // Clean up URL
+      router.replace('/dashboard')
+      alert('Successfully connected to Strava! 🎉')
+    } else if (stravaError) {
+      let errorMessage = 'Failed to connect to Strava.'
+      switch (stravaError) {
+        case 'access_denied':
+          errorMessage = 'Strava access was denied.'
+          break
+        case 'no_code':
+          errorMessage = 'No authorization code received from Strava.'
+          break
+        case 'token_exchange_failed':
+          errorMessage = 'Failed to exchange authorization code for access token.'
+          break
+        default:
+          errorMessage = 'An error occurred while connecting to Strava.'
+      }
+      alert(errorMessage)
+      // Clean up URL
+      router.replace('/dashboard')
+    }
+  }, [searchParams, handleStravaCallback, router])
 
   return (
     <div className="dashboardContainer">
       <div className="dashboardHeader">
         <div className="welcomeSection">
-          <h1 className="welcomeTitle">Welcome back, {user?.name || 'User'}!</h1>
+          <h1 className="welcomeTitle">Welcome, {user?.displayName || user?.email || 'User'}!</h1>
           <p className="welcomeSubtitle">Ready to crush your fitness goals today?</p>
         </div>
         <div className="userAvatar">
@@ -78,10 +115,19 @@ export default function Dashboard() {
             <h3 className="actionTitle">View Leaderboard</h3>
             <p className="actionDescription">See how you rank against others</p>
           </Link>
-          <div className="actionCard">
-            <div className="actionIcon">📱</div>
-            <h3 className="actionTitle">Connect Strava</h3>
-            <p className="actionDescription">Sync your activities automatically</p>
+          <div 
+            className={`actionCard ${isConnected ? 'connected' : 'clickable'}`}
+            onClick={isConnected ? disconnectFromStrava : connectToStrava}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="actionIcon">{isConnected ? '✅' : '📱'}</div>
+            <h3 className="actionTitle">{isConnected ? 'Strava Connected' : 'Connect Strava'}</h3>
+            <p className="actionDescription">
+              {isConnected 
+                ? `Connected as ${athleteData?.firstname || 'Athlete'} • Click to disconnect`
+                : 'Sync your activities automatically'
+              }
+            </p>
           </div>
           <div className="actionCard">
             <div className="actionIcon">📊</div>

@@ -49,8 +49,15 @@ try {
     signInWithEmailAndPassword: () => Promise.reject(new Error('Firebase not configured')),
     createUserWithEmailAndPassword: () => Promise.reject(new Error('Firebase not configured')),
     signInWithPopup: () => Promise.reject(new Error('Firebase not configured')),
-    signOut: () => Promise.reject(new Error('Firebase not configured')),
-    onAuthStateChanged: () => () => {}
+    signOut: () => {
+      console.warn('Firebase not configured - performing mock logout');
+      return Promise.resolve(); // Allow logout to succeed even without Firebase
+    },
+    onAuthStateChanged: (callback) => {
+      // Call callback with null user to ensure logged out state
+      setTimeout(() => callback(null), 0);
+      return () => {}; // Return unsubscribe function
+    }
   };
   
   db = {

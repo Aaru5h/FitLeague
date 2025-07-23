@@ -6,10 +6,16 @@ const STRAVA_API_URL = 'https://www.strava.com/api/v3';
 
 export const getStravaAuthUrl = () => {
   const clientId = process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID;
-  const redirectUri = `${window.location.origin}/api/strava/callback`;
+  const redirectUri = encodeURIComponent(`${window.location.origin}/api/strava/callback`);
   const scope = 'read,activity:read';
   
-  return `${STRAVA_AUTH_URL}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+  if (!clientId) {
+    console.error('Strava Client ID not configured');
+    alert('Strava integration not configured. Please contact support.');
+    return null;
+  }
+  
+  return `${STRAVA_AUTH_URL}?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&approval_prompt=force`;
 };
 
 export const exchangeCodeForToken = async (code) => {

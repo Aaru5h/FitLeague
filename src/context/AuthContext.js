@@ -33,12 +33,21 @@ export function AuthProvider({ children }) {
     return signInWithPopup(auth, provider)
   };
 
-  const logout = () => {
-    return signOut(auth)
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      // The user state will be automatically updated by onAuthStateChanged
+      console.log('User signed out successfully')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      throw error
+    }
   };
 
   useEffect(() => {
+    console.log('AuthContext: Setting up auth state listener');
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('AuthContext: Auth state changed:', user ? 'User logged in' : 'User logged out');
       setUser(user)
       setLoading(false)
     });

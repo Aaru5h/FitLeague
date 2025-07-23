@@ -33,7 +33,7 @@ export default function WorkoutDetailPage() {
     if (isTimerRunning) {
       interval = setInterval(() => {
         setWorkoutTimer(timer => timer + 1)
-      }, 1000)
+      }, 100)
     } else if (!isTimerRunning && workoutTimer !== 0) {
       clearInterval(interval)
     }
@@ -43,8 +43,6 @@ export default function WorkoutDetailPage() {
   const loadWorkout = () => {
     setLoading(true)
     try {
-      // In a real app, you'd fetch this from an API
-      // For now, we'll generate a workout based on the ID
       let difficulty = 'intermediate'
       let category = 'Full Body'
 
