@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import './styles.css'; // or use CSS Module if needed
+import './styles.css';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function Login() {
@@ -103,7 +103,7 @@ export default function Login() {
               disabled={loading}
               className="btn btn-primary"
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Logging In...' : 'Log In'}
             </button>
           </form>
 
