@@ -1,18 +1,343 @@
-body{
-  align-items: center;
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-
-.main{
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+.main {
+  padding: 0;
 }
 
-.nav{
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.hero {
+  padding: 8rem 0 6rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: #ffd700;
+  background: linear-gradient(45deg, #ffd700, #ffed4a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.cta {
   display: flex;
+  gap: 1rem;
   justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 180px;
+}
+
+.btnPrimary {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+}
+
+.btnOutline {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.btnOutline:hover {
+  background: white;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.btnLarge {
+  padding: 1.25rem 2.5rem;
+  font-size: 1.1rem;
+}
+
+/* Features Section */
+.features {
+  padding: 6rem 0;
+  background: white;
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #2d3748;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.featureCard {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 20px;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.featureIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.featureCard h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.featureCard p {
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+/* Integrations Section */
+.integrations {
+  padding: 6rem 0;
+  background: #f7fafc;
+}
+
+.integrationsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.integrationCard {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.integrationCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.integrationTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.integrationCard p {
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+/* Stats Section */
+.stats {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  text-align: center;
+}
+
+.statItem {
+  padding: 1rem;
+}
+
+.statNumber {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #ffd700;
+}
+
+.statLabel {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Final CTA Section */
+.finalCta {
+  padding: 6rem 0;
+  background: white;
+}
+
+.ctaContent {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaContent h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.ctaContent p {
+  font-size: 1.2rem;
+  color: #4a5568;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+  background: #2d3748;
+  color: white;
+  padding: 3rem 0;
+}
+
+.footerContent {
+  text-align: center;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.logoIcon {
+  font-size: 2rem;
+}
+
+.footer p {
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .hero {
+    padding: 6rem 0 4rem;
+  }
+  
+  .features,
+  .integrations,
+  .stats,
+  .finalCta {
+    padding: 4rem 0;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+  }
+  
+  .featuresGrid,
+  .integrationsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .statNumber {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .ctaContent h2 {
+    font-size: 2rem;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
 }

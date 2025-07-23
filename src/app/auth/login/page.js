@@ -1,64 +1,138 @@
-'use client'
-import Link from 'next/link'
-import React, { useState } from 'react'
-import { logIn } from '@/services/auth'
-import './styles.css'
-import { useRouter } from 'next/navigation'
+'use client';
 
-const Login = () => {
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import './styles.css'; // or use CSS Module if needed
+import { FcGoogle } from 'react-icons/fc';
 
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password,setPassword] = useState('')
+export default function Login() {
+  const googleIcon = <FcGoogle size={24} />;
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async()=>{
-    try {
-      await logIn(email, password);
-      router.push('/');
-    } catch (err) {
-      setError('Invalid email or password');
+  const { login, loginWithGoogle, user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
     }
-  }
+  }, [user, router]);
 
-  const handleEmail = (e)=>{
-    setEmail(e.target.value)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handlePassword = (e)=>{
-    setPassword(e.target.value)
-  }
+    if (!email || !password) {
+      return setError('Please fill in all fields');
+    }
+
+    try {
+      setError('');
+      setLoading(true);
+      await login(email, password);
+      router.push('/dashboard');
+    } catch (error) {
+      setError('Failed to log in: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setError('');
+      setLoading(true);
+      await loginWithGoogle();
+      router.push('/dashboard');
+    } catch (error) {
+      setError('Failed to log in with Google: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className = "login-container">
-      <h1 className = "login-header">Log in to your account</h1>
-      <input
-        type='email'
-        placeholder='Enter your email'
-        value={email}
-        onChange={handleEmail}
-        />
+    <div className="login-page">
+      <main className="login-main">
+        <div className="container">
+          <div className="login-wrapper">
+            <div className="card">
+              <div className="login-header">
+                <h1 className="login-title">Welcome Back</h1>
+                <p className="login-subtitle">Sign in to your FitLeague account</p>
+              </div>
 
-      
-      <input  
-        type='password'
-        placeholder='Password'
-        value={password}
-        onChange={handlePassword}
-      />
+              {error && <div className="login-error">{error}</div>}
 
-      {error && <p className="error">{error}</p>}
+              <form onSubmit={handleSubmit} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="form-input"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
 
-      <button className = "login-button" onClick={handleLogin}>Login</button>
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-input"
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
 
-      <p className='login-footer'>
-        If you haven't signed up, click{" "}
-      <Link href="signup">
-        here
-      </Link>
-      </p>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn btn-primary"
+                >
+                  {loading ? 'Signing In...' : 'Sign In'}
+                </button>
+              </form>
+
+              <div className="login-divider">
+                <span>or</span>
+              </div>
+
+              <button
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                className="btn btn-outline google-btn"
+              >
+                {googleIcon} Continue with Google
+              </button>
+
+              <div className="login-footer">
+                <p>
+                  Don't have an account?{' '}
+                  <Link href="/auth/signup" className="login-link">
+                    Sign up here
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
-  )
+  );
 }
-
-export default Login

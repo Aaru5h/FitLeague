@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
@@ -19,7 +18,7 @@ export default function Navbar() {
 
   return (
     <nav className={styles.navigation}>
-      <div className="container">
+      <div className={styles.container}>
         <div className={styles.wrapper}>
           <Link href="/" className={styles.brand}>
             <span className={styles.icon}>🏋️‍♀️</span>
@@ -55,17 +54,17 @@ export default function Navbar() {
                   <span className={styles.name}>
                     {user.displayName || user.email}
                   </span>
-                  <button onClick={handleLogout} className="btn btn-outline">
+                  <button onClick={handleLogout} className={`${styles.btn} ${styles.btnOutline}`}>
                     Logout
                   </button>
                 </div>
               </>
             ) : (
               <>
-                <Link href="/login" className="btn btn-outline">
+                <Link href="/auth/login" className={`${styles.btn} ${styles.btnOutline}`}>
                   Login
                 </Link>
-                <Link href="/signup" className="btn btn-primary">
+                <Link href="/auth/signup" className={`${styles.btn} ${styles.btnPrimary}`}>
                   Sign Up
                 </Link>
               </>

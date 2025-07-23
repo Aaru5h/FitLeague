@@ -1,41 +1,211 @@
-.navbar {
+/* Navigation Styles */
+.navigation {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.brand:hover {
+  color: #764ba2;
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.toggle span {
+  width: 25px;
+  height: 3px;
+  background: #667eea;
+  margin: 3px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.link {
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.link:hover {
+  color: #667eea;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 50%;
+  background: #667eea;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.name {
+  color: #4a5568;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #667eea;
+  color: #667eea;
+}
+
+.btn-outline:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .toggle {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ffffff;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #e5e5e5;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
-  
-  .navLinks {
-    display: flex;
+
+  .links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 2rem;
     gap: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
   }
-  
-  .navLinks a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s ease;
+
+  .linksOpen {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
   }
-  
-  .navLinks a:hover {
-    color: #0070f3;
+
+  .account {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    width: 100%;
+    text-align: center;
   }
-  
-  .authButton {
-    padding: 0.5rem 1rem;
-    background-color: #0070f3;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+
+  .btn {
+    width: 100%;
+    justify-content: center;
   }
-  
-  .authButton:hover {
-    background-color: #0059c1;
+
+  .name {
+    text-align: center;
+    padding: 0.5rem;
+    background: #f7fafc;
+    border-radius: 10px;
+    color: #667eea;
+    font-weight: 600;
   }
-  
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .brand {
+    font-size: 1.25rem;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
+}
