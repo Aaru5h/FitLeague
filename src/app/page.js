@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Navbar from '@/components/Navbar'
 import { useAuth } from '@/context/AuthContext'
 import styles from './page.module.css'
 
@@ -10,7 +9,6 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      <Navbar />
       
       <main className={styles.main}>
         {/* Hero Section */}

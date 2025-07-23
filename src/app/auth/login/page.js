@@ -57,79 +57,75 @@ export default function Login() {
   };
 
   return (
-    <div className="login-page">
-      <main className="login-main">
-        <div className="container">
-          <div className="login-wrapper">
-            <div className="card">
-              <div className="login-header">
-                <h1 className="login-title">Welcome Back</h1>
-                <p className="login-subtitle">Sign in to your FitLeague account</p>
-              </div>
+    <div className="pageWrapper">
+      <main className="pageMain">
+        <div className="loginBox">
+          <div className="loginHeader">
+            <h1 className="loginTitle">Welcome Back</h1>
+            <p className="loginSubtitle">Sign in to your FitLeague account</p>
+          </div>
 
-              {error && <div className="login-error">{error}</div>}
+          {error && <div className="formError">{error}</div>}
 
-              <form onSubmit={handleSubmit} className="login-form">
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="form-input"
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-input"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn btn-primary"
-                >
-                  {loading ? 'Signing In...' : 'Sign In'}
-                </button>
-              </form>
-
-              <div className="login-divider">
-                <span>or</span>
-              </div>
-
-              <button
-                onClick={handleGoogleLogin}
-                disabled={loading}
-                className="btn btn-outline google-btn"
-              >
-                {googleIcon} Continue with Google
-              </button>
-
-              <div className="login-footer">
-                <p>
-                  Don't have an account?{' '}
-                  <Link href="/auth/signup" className="login-link">
-                    Sign up here
-                  </Link>
-                </p>
-              </div>
+          <form onSubmit={handleSubmit} className="loginForm">
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-input"
+                placeholder="Enter your email"
+                required
+              />
             </div>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-input"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-primary"
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="formDivider">
+            <span>or</span>
+          </div>
+
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="btn btn-outline google-btn"
+          >
+            {googleIcon} Continue with Google
+          </button>
+
+          <div className="loginFooter">
+            <p>
+              Don't have an account?{' '}
+              <Link href="/auth/signup" className="linkText">
+                Sign up here
+              </Link>
+            </p>
           </div>
         </div>
       </main>
