@@ -41,11 +41,8 @@ export default function Navbar() {
                 <Link href="/dashboard" className={styles.link}>
                   Dashboard
                 </Link>
-                <Link href="/workouts" className={styles.link}>
+                <Link href="/workout" className={styles.link}>
                   Workouts
-                </Link>
-                <Link href="/challenges" className={styles.link}>
-                  Challenges
                 </Link>
                 <Link href="/leaderboard" className={styles.link}>
                   Leaderboard

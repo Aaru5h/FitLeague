@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import Navigation from '@/components/Navigation'
-import { getFallbackWorkout } from '@/lib/wger'
-import styles from './workout.module.css'
+import { useAuth } from '@/context/AuthContext'
+import { getFallbackWorkout, generateWgerWorkout } from '@/services/workoutService'
+import '../workout.css'
 
 export default function WorkoutDetailPage() {
   const [loading, setLoading] = useState(true)
@@ -22,7 +21,7 @@ export default function WorkoutDetailPage() {
 
   useEffect(() => {
     if (!user) {
-      router.push('/login')
+      router.push('/auth/login')
       return
     }
 
@@ -57,6 +56,7 @@ export default function WorkoutDetailPage() {
       const workoutData = getFallbackWorkout(difficulty)
       workoutData.id = params.id
       workoutData.category = category
+      workoutData.name = `${category} ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Workout`
       
       setWorkout(workoutData)
     } catch (error) {
@@ -115,21 +115,20 @@ export default function WorkoutDetailPage() {
 
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
-      case 'beginner': return 'var(--success)'
-      case 'intermediate': return 'var(--warning)'
-      case 'advanced': return 'var(--error)'
-      default: return 'var(--primary-color)'
+      case 'beginner': return '#28a745'
+      case 'intermediate': return '#ffc107'
+      case 'advanced': return '#dc3545'
+      default: return '#007bff'
     }
   }
 
   if (loading) {
     return (
-      <div className={styles.page}>
-        <Navigation />
-        <main className={styles.main}>
+      <div className="workout-page">
+        <main className="workout-main">
           <div className="container">
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
+            <div className="loading-wrapper">
+              <div className="loading-spinner"></div>
               <p>Loading workout...</p>
             </div>
           </div>
@@ -140,14 +139,13 @@ export default function WorkoutDetailPage() {
 
   if (!workout) {
     return (
-      <div className={styles.page}>
-        <Navigation />
-        <main className={styles.main}>
+      <div className="workout-page">
+        <main className="workout-main">
           <div className="container">
-            <div className={styles.error}>
+            <div className="empty-state">
               <h2>Workout Not Found</h2>
               <p>The workout you're looking for doesn't exist.</p>
-              <Link href="/workouts" className="btn btn-primary">
+              <Link href="/workout" className="btn btn-primary">
                 Back to Workouts
               </Link>
             </div>
@@ -161,66 +159,66 @@ export default function WorkoutDetailPage() {
   const progressPercentage = (completedExercises.size / workout.exercises.length) * 100
 
   return (
-    <div className={styles.page}>
-      <Navigation />
-      
-      <main className={styles.main}>
+    <div className="workout-page">
+      <main className="workout-main">
         <div className="container">
-          <div className={styles.header}>
-            <div className={styles.breadcrumb}>
-              <Link href="/workouts">Workouts</Link>
-              <span> / </span>
-              <span>{workout.name}</span>
+          <div className="workout-header">
+            <div style={{ marginBottom: '1rem' }}>
+              <Link href="/workout" style={{ color: '#007bff', textDecoration: 'none' }}>← Back to Workouts</Link>
             </div>
             
-            <div className={styles.workoutTitle}>
-              <h1 className={styles.title}>{workout.name}</h1>
-              <span 
-                className={styles.difficultyBadge}
-                style={{ backgroundColor: getDifficultyColor(workout.difficulty) }}
-              >
-                {workout.difficulty}
-              </span>
-            </div>
+            <div className="workout-card" style={{ marginBottom: '2rem' }}>
+              <div className="workout-card-header">
+                <h1 className="workout-name">{workout.name}</h1>
+                <span 
+                  className="difficulty-badge"
+                  style={{ backgroundColor: getDifficultyColor(workout.difficulty) }}
+                >
+                  {workout.difficulty}
+                </span>
+              </div>
 
-            <div className={styles.workoutMeta}>
-              <div className={styles.metaItem}>
-                <span className={styles.icon}>⏱️</span>
-                <span>Est. {workout.estimatedDuration} mins</span>
-              </div>
-              <div className={styles.metaItem}>
-                <span className={styles.icon}>🎯</span>
-                <span>{workout.category}</span>
-              </div>
-              <div className={styles.metaItem}>
-                <span className={styles.icon}>💪</span>
-                <span>{workout.exercises.length} exercises</span>
+              <div className="workout-info">
+                <div className="info-item">
+                  <span className="info-icon">⏱️</span>
+                  <span>Est. {workout.estimatedDuration} mins</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-icon">🎯</span>
+                  <span>{workout.category}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-icon">💪</span>
+                  <span>{workout.exercises.length} exercises</span>
+                </div>
               </div>
             </div>
           </div>
 
           {workoutStarted && (
-            <div className={styles.workoutTracker}>
-              <div className={styles.trackerHeader}>
-                <div className={styles.timer}>
-                  <span className={styles.timerLabel}>Time:</span>
-                  <span className={styles.timerValue}>{formatTime(workoutTimer)}</span>
+            <div className="workout-card" style={{ marginBottom: '2rem', background: '#f8f9fa' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ fontSize: '1.2rem', fontWeight: '600' }}>
+                  Time: <span style={{ color: '#007bff' }}>{formatTime(workoutTimer)}</span>
                 </div>
                 
-                <div className={styles.progress}>
-                  <span className={styles.progressLabel}>Progress:</span>
-                  <div className={styles.progressBar}>
+                <div style={{ flex: 1, margin: '0 2rem' }}>
+                  <div style={{ background: '#e9ecef', borderRadius: '10px', overflow: 'hidden', height: '20px' }}>
                     <div 
-                      className={styles.progressFill}
-                      style={{ width: `${progressPercentage}%` }}
+                      style={{ 
+                        background: '#28a745', 
+                        height: '100%', 
+                        width: `${progressPercentage}%`,
+                        transition: 'width 0.3s ease'
+                      }}
                     ></div>
                   </div>
-                  <span className={styles.progressText}>
-                    {completedExercises.size}/{workout.exercises.length}
-                  </span>
+                  <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: '#6c757d' }}>
+                    {completedExercises.size}/{workout.exercises.length} exercises completed
+                  </div>
                 </div>
 
-                <div className={styles.trackerActions}>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button 
                     onClick={pauseTimer}
                     className={`btn ${isTimerRunning ? 'btn-outline' : 'btn-primary'}`}
@@ -229,7 +227,7 @@ export default function WorkoutDetailPage() {
                   </button>
                   
                   {isWorkoutComplete && (
-                    <button onClick={finishWorkout} className="btn btn-success">
+                    <button onClick={finishWorkout} className="btn btn-primary" style={{ background: '#28a745' }}>
                       Finish Workout
                     </button>
                   )}
@@ -242,76 +240,108 @@ export default function WorkoutDetailPage() {
             </div>
           )}
 
-          <div className={styles.content}>
-            {!workoutStarted && (
-              <div className={styles.startSection}>
-                <div className={styles.startCard}>
-                  <h2>Ready to Start?</h2>
-                  <p>
-                    This {workout.difficulty} workout consists of {workout.exercises.length} exercises 
-                    and should take approximately {workout.estimatedDuration} minutes to complete.
-                  </p>
-                  <button onClick={startWorkout} className="btn btn-primary btn-large">
-                    Start Workout
-                  </button>
-                </div>
-              </div>
-            )}
+          {!workoutStarted && (
+            <div className="workout-card" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <h2>Ready to Start?</h2>
+              <p style={{ marginBottom: '1.5rem', color: '#6c757d' }}>
+                This {workout.difficulty} workout consists of {workout.exercises.length} exercises 
+                and should take approximately {workout.estimatedDuration} minutes to complete.
+              </p>
+              <button onClick={startWorkout} className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.1rem' }}>
+                🚀 Start Workout
+              </button>
+            </div>
+          )}
 
-            <div className={styles.exerciseList}>
-              <h2 className={styles.sectionTitle}>Exercises</h2>
+          <div className="workouts-grid" style={{ gridTemplateColumns: '1fr' }}>
+            <h2 style={{ gridColumn: '1 / -1', marginBottom: '1rem' }}>Exercises</h2>
+            
+            {workout.exercises.map((exercise, index) => {
+              const isCompleted = completedExercises.has(index)
+              const isCurrent = workoutStarted && index === currentExerciseIndex
               
-              {workout.exercises.map((exercise, index) => {
-                const isCompleted = completedExercises.has(index)
-                const isCurrent = workoutStarted && index === currentExerciseIndex
-                
-                return (
-                  <div 
-                    key={exercise.id} 
-                    className={`${styles.exerciseCard} ${isCompleted ? styles.completed : ''} ${isCurrent ? styles.current : ''}`}
-                  >
-                    <div className={styles.exerciseHeader}>
-                      <div className={styles.exerciseInfo}>
-                        <span className={styles.exerciseNumber}>{index + 1}</span>
-                        <div>
-                          <h3 className={styles.exerciseName}>{exercise.name}</h3>
-                          <div className={styles.exerciseDetails}>
-                            <span>{exercise.sets} sets × {exercise.reps} reps</span>
-                            <span className={styles.rest}>Rest: {exercise.rest}</span>
-                          </div>
+              return (
+                <div 
+                  key={exercise.id} 
+                  className="workout-card"
+                  style={{
+                    border: isCurrent ? '2px solid #007bff' : '1px solid #e9ecef',
+                    background: isCompleted ? '#d4edda' : 'white',
+                    position: 'relative'
+                  }}
+                >
+                  <div className="workout-card-header">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <span 
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '2rem',
+                          height: '2rem',
+                          borderRadius: '50%',
+                          background: isCompleted ? '#28a745' : isCurrent ? '#007bff' : '#e9ecef',
+                          color: isCompleted || isCurrent ? 'white' : '#495057',
+                          fontWeight: '600',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        {isCompleted ? '✓' : index + 1}
+                      </span>
+                      <div>
+                        <h3 className="workout-name" style={{ margin: 0, fontSize: '1.1rem' }}>{exercise.name}</h3>
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.25rem' }}>
+                          <span style={{ color: '#6c757d', fontSize: '0.9rem' }}>
+                            {exercise.sets} sets × {exercise.reps} reps
+                          </span>
+                          <span style={{ color: '#28a745', fontSize: '0.9rem' }}>
+                            Rest: {exercise.rest}
+                          </span>
                         </div>
                       </div>
-                      
-                      {workoutStarted && (
-                        <button
-                          onClick={() => isCompleted ? uncompleteExercise(index) : completeExercise(index)}
-                          className={`btn ${isCompleted ? 'btn-outline' : 'btn-primary'}`}
-                        >
-                          {isCompleted ? 'Undo' : 'Complete'}
-                        </button>
-                      )}
                     </div>
-
-                    {exercise.description && (
-                      <div className={styles.exerciseDescription}>
-                        <p>{exercise.description}</p>
-                      </div>
-                    )}
-
-                    {exercise.muscles && exercise.muscles.length > 0 && (
-                      <div className={styles.muscleGroups}>
-                        <span className={styles.muscleLabel}>Target muscles:</span>
-                        {exercise.muscles.map((muscle, idx) => (
-                          <span key={idx} className={styles.muscleTag}>
-                            {muscle}
-                          </span>
-                        ))}
-                      </div>
+                    
+                    {workoutStarted && (
+                      <button
+                        onClick={() => isCompleted ? uncompleteExercise(index) : completeExercise(index)}
+                        className={`btn ${isCompleted ? 'btn-outline' : 'btn-primary'}`}
+                      >
+                        {isCompleted ? 'Undo' : 'Complete'}
+                      </button>
                     )}
                   </div>
-                )
-              })}
-            </div>
+
+                  {exercise.description && (
+                    <div style={{ marginTop: '1rem', padding: '1rem', background: '#f8f9fa', borderRadius: '8px' }}>
+                      <p style={{ margin: 0, color: '#495057' }}>{exercise.description}</p>
+                    </div>
+                  )}
+
+                  {exercise.muscles && exercise.muscles.length > 0 && (
+                    <div style={{ marginTop: '1rem' }}>
+                      <span style={{ fontWeight: '600', color: '#495057', marginRight: '0.5rem' }}>Target muscles:</span>
+                      {exercise.muscles.map((muscle, idx) => (
+                        <span 
+                          key={idx} 
+                          style={{
+                            display: 'inline-block',
+                            background: '#007bff',
+                            color: 'white',
+                            padding: '0.25rem 0.5rem',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            marginRight: '0.5rem',
+                            marginTop: '0.25rem'
+                          }}
+                        >
+                          {muscle}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </main>

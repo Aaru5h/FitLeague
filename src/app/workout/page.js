@@ -96,7 +96,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import { getFallbackWorkout, generateRandomWorkout } from '@/services/workoutService'
+import { getFallbackWorkout, generateRandomWorkout, generateWgerWorkout, getExercises } from '@/services/workoutService'
 import './workout.css'
 
 export default function WorkoutsPage() {
@@ -124,14 +124,32 @@ export default function WorkoutsPage() {
     setLoading(true)
     try {
       const difficulties = ['beginner', 'intermediate', 'advanced']
+      const categories = ['Full Body', 'Upper Body', 'Lower Body']
       const initialWorkouts = []
 
       // Generate 3 workouts for each difficulty
       for (const difficulty of difficulties) {
         for (let i = 0; i < 3; i++) {
-          const workout = getFallbackWorkout(difficulty)
+          const category = categories[i]
+          
+          let workout;
+          // Try to use Wger API for some workouts, fallback for others
+          if (i === 0) { // Use Wger for first workout of each difficulty
+            try {
+              workout = await generateWgerWorkout(difficulty, category, 30)
+            } catch (error) {
+              console.warn(`Wger API failed for ${difficulty} ${category}, using fallback`);
+              workout = getFallbackWorkout(difficulty)
+              workout.category = category
+            }
+          } else {
+            // Use fallback for other workouts to ensure we have variety
+            workout = getFallbackWorkout(difficulty)
+            workout.category = category
+          }
+          
           workout.id = `${difficulty}-${i + 1}`
-          workout.category = i === 0 ? 'Full Body' : i === 1 ? 'Upper Body' : 'Lower Body'
+          workout.name = `${category} ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Workout`
           initialWorkouts.push(workout)
         }
       }
@@ -140,6 +158,23 @@ export default function WorkoutsPage() {
       setFilteredWorkouts(initialWorkouts)
     } catch (error) {
       console.error('Error generating initial workouts:', error)
+      // Fallback to basic workouts if everything fails
+      const fallbackWorkouts = [];
+      const difficulties = ['beginner', 'intermediate', 'advanced']
+      const categories = ['Full Body', 'Upper Body', 'Lower Body']
+      
+      for (const difficulty of difficulties) {
+        for (let i = 0; i < 3; i++) {
+          const workout = getFallbackWorkout(difficulty)
+          workout.id = `${difficulty}-${i + 1}`
+          workout.category = categories[i]
+          workout.name = `${categories[i]} ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Workout`
+          fallbackWorkouts.push(workout)
+        }
+      }
+      
+      setWorkouts(fallbackWorkouts)
+      setFilteredWorkouts(fallbackWorkouts)
     } finally {
       setLoading(false)
     }
@@ -150,10 +185,12 @@ export default function WorkoutsPage() {
     try {
       const difficulties = ['beginner', 'intermediate', 'advanced']
       const categories = ['Full Body', 'Upper Body', 'Lower Body', 'Cardio', 'Core']
+      const durations = [15, 20, 30, 45]
       
       // If filters are active, use those for the new workout to ensure it's visible
       let randomDifficulty = difficulties[Math.floor(Math.random() * difficulties.length)]
       let randomCategory = categories[Math.floor(Math.random() * categories.length)]
+      let randomDuration = durations[Math.floor(Math.random() * durations.length)]
       
       // Use current filters if they're not 'all' to ensure new workout is visible
       if (selectedDifficulty !== 'all') {
@@ -163,10 +200,20 @@ export default function WorkoutsPage() {
         randomCategory = selectedCategory
       }
       
-      const newWorkout = getFallbackWorkout(randomDifficulty)
+      // Try to generate a workout using Wger API first, then fallback
+      let newWorkout;
+      try {
+        newWorkout = await generateWgerWorkout(randomDifficulty, randomCategory, randomDuration)
+        console.log('Generated workout using Wger API:', newWorkout)
+      } catch (wgerError) {
+        console.warn('Wger API failed, using fallback:', wgerError)
+        newWorkout = getFallbackWorkout(randomDifficulty)
+        newWorkout.category = randomCategory
+        newWorkout.estimatedDuration = randomDuration
+        newWorkout.name = `${randomCategory} ${randomDifficulty.charAt(0).toUpperCase() + randomDifficulty.slice(1)} Workout`
+      }
+      
       newWorkout.id = `custom-${Date.now()}`
-      newWorkout.category = randomCategory
-      newWorkout.name = `${randomCategory} ${randomDifficulty.charAt(0).toUpperCase() + randomDifficulty.slice(1)} Workout`
       
       const updatedWorkouts = [...workouts, newWorkout]
       setWorkouts(updatedWorkouts)
@@ -177,7 +224,8 @@ export default function WorkoutsPage() {
       
       // Show success message
       setTimeout(() => {
-        alert(`New ${randomCategory} ${randomDifficulty} workout generated! 💪`)
+        const source = newWorkout.source === 'wger' ? ' (from Wger database)' : ''
+        alert(`New ${randomCategory} ${randomDifficulty} workout generated${source}! 💪`)
       }, 100)
     } catch (error) {
       console.error('Error generating new workout:', error)
