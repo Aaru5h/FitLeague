@@ -368,7 +368,7 @@ export default function LeaderboardPage() {
           <div className="container">
             <div className="loading-wrapper">
               <div className="loading-spinner"></div>
-              <p>Loading leaderboard...</p>
+              <p>Loading leaderboard</p>
             </div>
           </div>
         </main>

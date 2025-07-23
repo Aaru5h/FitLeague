@@ -1,34 +1,33 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
-import styles from './Navbar.module.css';
+import { useState } from 'react'
+import Link from 'next/link'
+import { useAuth } from '@/context/AuthContext'
+import styles from './Navbar.module.css'
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await logout()
     } catch (error) {
-      console.error('Failed to log out:', error);
+      console.error('Failed to log out:', error)
     }
-  };
+  }
 
   return (
-    <nav className={styles.nav}>
+    <nav className={styles.navigation}>
       <div className="container">
-        <div className={styles.navContainer}>
-          <Link href="/" className={styles.logo}>
-            <span className={styles.logoIcon}>🏋️‍♀️</span>
+        <div className={styles.wrapper}>
+          <Link href="/" className={styles.brand}>
+            <span className={styles.icon}>🏋️‍♀️</span>
             FitLeague
           </Link>
 
-          {/* Mobile menu button */}
           <button
-            className={styles.menuButton}
+            className={styles.toggle}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -37,24 +36,23 @@ export default function Navbar() {
             <span></span>
           </button>
 
-          {/* Navigation links */}
-          <div className={`${styles.navLinks} ${isMenuOpen ? styles.navLinksOpen : ''}`}>
+          <div className={`${styles.links} ${isMenuOpen ? styles.linksOpen : ''}`}>
             {user ? (
               <>
-                <Link href="/dashboard" className={styles.navLink}>
+                <Link href="/dashboard" className={styles.link}>
                   Dashboard
                 </Link>
-                <Link href="/workouts" className={styles.navLink}>
+                <Link href="/workouts" className={styles.link}>
                   Workouts
                 </Link>
-                <Link href="/challenges" className={styles.navLink}>
+                <Link href="/challenges" className={styles.link}>
                   Challenges
                 </Link>
-                <Link href="/leaderboard" className={styles.navLink}>
+                <Link href="/leaderboard" className={styles.link}>
                   Leaderboard
                 </Link>
-                <div className={styles.userMenu}>
-                  <span className={styles.userName}>
+                <div className={styles.account}>
+                  <span className={styles.name}>
                     {user.displayName || user.email}
                   </span>
                   <button onClick={handleLogout} className="btn btn-outline">
@@ -76,5 +74,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

@@ -1,52 +1,420 @@
-.leaderboard-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  }
-  
+body {
+  --background: #f8f9fa;
+  --foreground: #212529;
+  --primary-color: #007bff;
+  --success: #28a745;
+  --warning: #ffc107;
+  --error: #dc3545;
+  --border: #ced4da;
+  --strava-orange: #fc4c02;
+}
+
+.leaderboard-page {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.leaderboard-main {
+  padding: 2rem 0;
+}
+
+.leaderboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.leaderboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.leaderboard-subtitle {
+  font-size: 1.2rem;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
+.loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.strava-prompt {
+  margin-bottom: 2rem;
+}
+
+.strava-prompt-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--strava-orange);
+}
+
+.strava-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.mock-note {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--warning);
+}
+
+.user-rank-card {
+  background: linear-gradient(135deg, var(--primary-color), #4f46e5);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.user-rank {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rank-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.rank-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.rank-info p {
+  opacity: 0.9;
+}
+
+.leaderboard-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.leaderboard-filters {
+  display: flex;
+  gap: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+
+.filter-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--foreground);
+  min-width: 140px;
+}
+
+.leaderboard-section {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.leaderboard-section-header {
+  background: var(--primary-color);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.leaderboard-section-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.leaderboard-list {
+  padding: 0;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-item:hover {
+  background: rgba(0, 123, 255, 0.05);
+}
+
+.leaderboard-item.current-user {
+  background: rgba(0, 123, 255, 0.1);
+  border-left: 4px solid var(--primary-color);
+}
+
+.leaderboard-rank {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 80px;
+}
+
+.leaderboard-rank .rank-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  width: 40px;
+  text-align: center;
+}
+
+.rank-badge {
+  font-size: 1.5rem;
+}
+
+.athlete-info-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.athlete-avatar {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 50%;
+}
+
+.athlete-meta {
+  flex: 1;
+}
+
+.athlete-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.you-label {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.athlete-stats {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+.stat-block {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.stat-box {
+  text-align: center;
+  min-width: 70px;
+}
+
+.stat-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--foreground);
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.recent-activities-section {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.recent-activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 123, 255, 0.05);
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--strava-orange);
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  text-align: center;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-details h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+
+.activity-meta {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  opacity: 0.7;
+}
+
+.activity-points {
+  font-weight: 600;
+  color: var(--success);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
   .leaderboard-title {
-    text-align: center;
     font-size: 2rem;
-    font-weight: 600;
-    color: #1A73E8;
-    margin-bottom: 1.5rem;
   }
-  
-  .loading-message {
-    text-align: center;
-    font-size: 1.25rem;
-    color: #5F6368;
+
+  .leaderboard-subtitle {
+    font-size: 1rem;
   }
-  
-  .leaderboard-table {
+
+  .leaderboard-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
   }
-  
-  .leaderboard-table th {
-    background-color: #F1F3F4;
-    font-weight: 600;
-    text-align: left;
-    padding: 0.75rem;
-    color: #3C4043;
+
+  .filter-select {
+    min-width: auto;
   }
-  
-  .leaderboard-table td {
-    padding: 0.75rem;
-    border-top: 1px solid #E0E0E0;
-    text-align: left;
-    color: #5F6368;
+
+  .user-rank {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
   }
-  
-  .leaderboard-table tr:hover {
-    background-color: #E8F0FE;
+
+  .leaderboard-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .leaderboard-table tr:nth-child(even) {
-    background-color: #F9F9F9;
+
+  .leaderboard-rank {
+    align-self: flex-start;
   }
-  
+
+  .athlete-info-block {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .stat-block {
+    width: 100%;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .activity-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .activity-details {
+    width: 100%;
+  }
+
+  .activity-meta {
+    flex-wrap: wrap;
+  }
+}
