@@ -11,7 +11,7 @@ export default function Dashboard() {
   const { user, loading } = useAuth()
   const { isConnected, connectToStrava, disconnectFromStrava, athleteData, handleStravaCallback } = useStrava()
   const [stats, setStats] = useState({
-    workoutsCompleted: 42,
+    workoutsCompleted: 40,
     totalPoints: 1250,
     currentStreak: 7,
     weeklyGoal: 5
